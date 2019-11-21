@@ -3,6 +3,7 @@ import java.util.ArrayList;
 // The Student class. Subclass to Person class.
 public class Student extends Person {
     private ArrayList<Integer> certificates;
+    private Course enrolledCourse;
 
     // The inherited constructor for Student from Person. Initialises the certificates ArrayList.
     public Student(String name, char gender, int age) {
@@ -30,5 +31,15 @@ public class Student extends Person {
             }
         }
         return false;
+    }
+
+    // Sets the currently enrolled course.
+    public void setEnrolledCourse(Course enrolledCourse) {
+        this.enrolledCourse = enrolledCourse;
+    }
+
+    // Gets the currently enrolled course.
+    public Course getEnrolledCourse() {
+        return enrolledCourse;
     }
 }

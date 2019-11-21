@@ -55,6 +55,7 @@ public class Course {
                 if (getStatus() == 0) {
                     for (Student student : enrolledStudents) {
                         student.graduate(this.subject);
+                        student.setEnrolledCourse(null);
                     }
                 }
             }
@@ -67,6 +68,7 @@ public class Course {
             return false;
         } else {
             enrolledStudents.add(student);
+            student.setEnrolledCourse(this);
             return true;
         }
     }
@@ -103,6 +105,10 @@ public class Course {
 
     // Unenrolls the students and removes the instructor.
     public void endCourse() {
+        for (Student student : enrolledStudents) {
+            student.setEnrolledCourse(null);
+        }
+
         enrolledStudents = new ArrayList<>();
 
         if (instructor != null) {
