@@ -1,5 +1,7 @@
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 // The Administrator class.
 public class Administrator {
@@ -72,8 +74,10 @@ public class Administrator {
 
     // Runs the simulation for a given number of days.
     public void run(int days) {
-        for (int i = 0; i < days; i++) {
+        for (int i = 1; i <= days; i++) {
             run();
+
+            System.out.println("Day " + i + ":");
 
             // Prints information about courses.
             for (Course course : school.getCourses()) {
@@ -92,16 +96,33 @@ public class Administrator {
         }
     }
 
+    // Gets the initial configuration file.
+    public static Administrator loadConfig(String fileName) throws FileNotFoundException {
+        Scanner fileReader = new Scanner("D:/Documents/IdeaProjects/TrainingSchool/src/" + fileName);
+
+        Administrator admin = new Administrator(fileReader.nextLine());
+        return admin;
+    }
+
     // Main method to run the simulation.
     public static void main(String[] args) {
-        try
-        {
-            Thread.sleep(500);
-            Administrator administrator = new Administrator("Calthorpe Park School");
-            administrator.run(3);
-        }
-        catch (InterruptedException e)
-        {
+        // Creates a scanner to input the school details.
+        Scanner userInput = new Scanner(System.in);
+
+        // Creates the administrator of the school and loads the initial configuration file.
+        System.out.println("Enter in the name of the file that contains the initial school configuration.");
+        try {
+            Administrator admin = loadConfig(userInput.nextLine() + ".txt");
+
+            // Runs the school for a given number of days.
+            System.out.println("How long do you want to run the school for.");
+            int daysToRun = userInput.nextInt();
+            if (daysToRun > 0) {
+                admin.run(daysToRun);
+            }
+
+            System.out.println(admin.school.toString());
+        } catch (FileNotFoundException e) {
             System.out.println(e);
         }
     }

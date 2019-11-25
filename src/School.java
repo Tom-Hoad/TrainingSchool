@@ -122,4 +122,10 @@ public class School {
     public ArrayList<Instructor> getInstructors() {
         return instructors;
     }
+
+    @Override
+    public String toString() {
+        return this.name + " has " + getSubjects().size() + " subjects, " + getCourses().size() + " courses, " +
+                getInstructors().size() + " instructors and " + getStudents().size() + " students.";
+    }
 }
