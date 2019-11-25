@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Random;
@@ -98,10 +99,63 @@ public class Administrator {
 
     // Gets the initial configuration file.
     public static Administrator loadConfig(String fileName) throws FileNotFoundException {
-        Scanner fileReader = new Scanner("D:/Documents/IdeaProjects/TrainingSchool/src/" + fileName);
+        // Creates a scanner to read the file which instantiates the administrator.
+        Scanner fileReader = new Scanner(new File("D:/Documents/IdeaProjects/TrainingSchool/src/" + fileName));
+        Administrator admin = new Administrator(getValue(fileReader.nextLine()));
 
-        Administrator admin = new Administrator(fileReader.nextLine());
+        // Reads the rest of the file.
+        while (fileReader.hasNextLine()) {
+            String thisLine = fileReader.nextLine();
+            String object = getObject(thisLine);
+            String[] split = getValue(thisLine).split(",");
+
+            // Fills the school.
+            switch (object) {
+                // Adds a subject to the school.
+                case "subject":
+                    Subject subject = new Subject(Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+                    subject.setDescription(split[0]);
+                    admin.school.add(subject);
+                    break;
+                // Adds a student to the school.
+                case "student":
+                    Student student = new Student(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                    admin.school.add(student);
+                    break;
+                // Adds a teacher to the school.
+                case "Teacher":
+                    Teacher teacher = new Teacher(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                    admin.school.add(teacher);
+                    break;
+                // Adds a demonstrator to the school.
+                case "Demonstrator":
+                    Demonstrator demonstrator = new Demonstrator(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                    admin.school.add(demonstrator);
+                    break;
+                // Adds a guiTrainer to the school.
+                case "GUITrainer":
+                    GUITrainer guiTrainer = new GUITrainer(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                    admin.school.add(guiTrainer);
+                    break;
+                // Adds a ooTrainer to the school.
+                case "OOTrainer":
+                    OOTrainer ooTrainer = new OOTrainer(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                    admin.school.add(ooTrainer);
+                    break;
+            }
+        }
+
         return admin;
+    }
+
+    // Reads the config file to return the value after the colon.
+    public static String getValue(String line) {
+        return line.substring(line.indexOf(':') + 1);
+    }
+
+    // Reads the config file to return the object before the colon.
+    public static String getObject(String line) {
+        return line.substring(0, line.indexOf(':'));
     }
 
     // Main method to run the simulation.

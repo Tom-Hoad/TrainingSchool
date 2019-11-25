@@ -30,6 +30,7 @@ public class School {
             for (Instructor instructor : getInstructors()) {
                 if (instructor.canTeach(course.getSubject()) && instructor.getAssignedCourse() == null && !course.hasInstructor()) {
                     course.setInstructor(instructor);
+                    instructor.assignCourse(course);
                 }
             }
         }
@@ -37,7 +38,7 @@ public class School {
         // Enrolls all the free students on a course.
         for (Student student : getStudents()) {
             for (Course course : getCourses()) {
-                if (student.hasCertificate(course.getSubject()) && course.getSize() > 3) {
+                if (!student.hasCertificate(course.getSubject())) {
                     course.enrolStudent(student);
                 }
             }

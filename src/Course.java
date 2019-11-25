@@ -108,7 +108,6 @@ public class Course {
         for (Student student : enrolledStudents) {
             student.setEnrolledCourse(null);
         }
-
         enrolledStudents = new ArrayList<>();
 
         if (instructor != null) {
