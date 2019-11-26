@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -18,7 +19,7 @@ public class Administrator {
         Random rand = new Random();
 
         // Adds up to two new students to the school.
-        for (int i = 0; i < rand.nextInt(2) + 1; i++) {
+        for (int i = 0; i < rand.nextInt(3); i++) {
             school.add(new Student("Ross", 'M', 32));
         }
 
@@ -40,21 +41,26 @@ public class Administrator {
         school.aDayAtSchool();
 
         // Might remove a spare teacher.
+        ArrayList<Instructor> toRemoveInstructors = new ArrayList<>();
+
         for (Instructor instructor : school.getInstructors()) {
             if (instructor.getAssignedCourse() == null && rand.nextFloat() <= 0.2) {
-                school.remove(instructor);
+                toRemoveInstructors.add(instructor);
                 break;
             }
         }
+        school.removeInstructors(toRemoveInstructors);
 
         // Might remove a student.
+        ArrayList<Student> toRemoveStudents = new ArrayList<>();
+
         for (Student student : school.getStudents()) {
             boolean studying = false;
 
             // Removes any graduates that have a certificate in every course.
             if (student.getCertificates().size() == school.getSubjects().size() && school.getSubjects().size() > 0) {
                 System.out.println(student.getName());
-                school.remove(student);
+                toRemoveStudents.add(student);
                 break;
             }
 
@@ -67,10 +73,11 @@ public class Administrator {
 
             // Might remove a spare student.
            if (!studying && rand.nextFloat() <= 0.05) {
-                school.remove(student);
+                toRemoveStudents.add(student);
                 break;
            }
         }
+        school.removeStudents(toRemoveStudents);
     }
 
     // Runs the simulation for a given number of days.
@@ -94,6 +101,8 @@ public class Administrator {
             for (Instructor instructor : school.getInstructors()) {
                 System.out.println("Instructor: " + instructor.getAssignedCourse());
             }
+
+            System.out.println(this.school.toString());
         }
     }
 
@@ -174,8 +183,6 @@ public class Administrator {
             if (daysToRun > 0) {
                 admin.run(daysToRun);
             }
-
-            System.out.println(admin.school.toString());
         } catch (FileNotFoundException e) {
             System.out.println(e);
         }

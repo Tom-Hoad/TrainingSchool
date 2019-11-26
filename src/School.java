@@ -56,7 +56,6 @@ public class School {
                 toRemove.add(course);
             }
         }
-
         courses.removeAll(toRemove);
     }
 
@@ -78,6 +77,11 @@ public class School {
     // Removes a student from the school.
     public void remove(Student student) {
         students.remove(student);
+    }
+
+    // Removes several students from the school.
+    public void removeStudents(ArrayList<Student> toRemove) {
+        students.removeAll(toRemove);
     }
 
     // Gets the ArrayList of students in the school.
@@ -123,6 +127,11 @@ public class School {
     // Removes a instructor from the school.
     public void remove(Instructor instructor) {
         instructors.remove(instructor);
+    }
+
+    // Removes several instructors from the school.
+    public void removeInstructors(ArrayList<Instructor> toRemove) {
+        instructors.removeAll(toRemove);
     }
 
     // Gets the ArrayList of instructors in the school.

@@ -57,6 +57,7 @@ public class Course {
                         student.graduate(this.subject);
                         student.setEnrolledCourse(null);
                     }
+                    endCourse();
                 }
             }
         }
@@ -112,7 +113,6 @@ public class Course {
 
         if (instructor != null) {
             instructor.unassignCourse();
-            instructor = null;
         }
     }
 }
