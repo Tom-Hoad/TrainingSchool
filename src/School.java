@@ -62,7 +62,8 @@ public class School {
 
     // Gets the subjects that aren't being taught.
     public ArrayList<Subject> freeSubjects() {
-        ArrayList<Subject> freeSubjects = getSubjects();
+        ArrayList<Subject> freeSubjects = new ArrayList<>();
+        freeSubjects.addAll(getSubjects());
         for (Course course : getCourses()) {
             freeSubjects.remove(course.getSubject());
         }
