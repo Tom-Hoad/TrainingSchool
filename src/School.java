@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 // The School class.
@@ -44,15 +45,19 @@ public class School {
             }
         }
 
-        // Moves the day on for all courses.
+        // Moves the day on for all courses and removes finished courses.
+        ArrayList<Course> toRemove = new ArrayList<>();
+
         for (Course course : getCourses()) {
             course.aDayPasses();
 
             // Removes any courses that are cancelled or finished.
             if (course.isCancelled() || course.getStatus() == 0) {
-                courses.remove(course);
+                toRemove.add(course);
             }
         }
+
+        courses.removeAll(toRemove);
     }
 
     // Gets the subjects that aren't being taught.
