@@ -153,6 +153,7 @@ public class School {
     @Override
     public String toString() {
         return this.name + " has " + getSubjects().size() + " subjects, " + getCourses().size() + " courses, " +
-                getInstructors().size() + " instructors and " + getStudents().size() + " students.";
+               getInstructors().size() + " instructors, " + getStudents().size() + " students and " +
+               getGraduates().size() + " graduates.";
     }
 }

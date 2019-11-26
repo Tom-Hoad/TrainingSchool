@@ -59,7 +59,7 @@ public class Administrator {
 
             // Removes any graduates that have a certificate in every course.
             if (student.getCertificates().size() == school.getSubjects().size() && school.getSubjects().size() > 0) {
-                System.out.println(student.getName());
+                school.add(new Graduate(student.getName(), student.getGender(), student.getAge()));
                 toRemoveStudents.add(student);
                 break;
             }
@@ -102,12 +102,23 @@ public class Administrator {
                 System.out.println("Instructor: " + instructor.getAssignedCourse());
             }
 
+            updateGraduations(i);
+
             // Prints the status of the school and pauses for a second.
             try {
                 System.out.println(this.school.toString());
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 System.out.println(e);
+            }
+        }
+    }
+
+    // Sets the day of graduation for new graduates.
+    public void updateGraduations(int day) {
+        for (Graduate graduate : school.getGraduates()) {
+            if (graduate.getGraduationDay() == 0) {
+                graduate.setGraduationDay(day);
             }
         }
     }
@@ -190,6 +201,7 @@ public class Administrator {
             int daysToRun = userInput.nextInt();
             if (daysToRun > 0) {
                 admin.run(daysToRun);
+                System.out.println("Simulation Over");
             }
         } catch (FileNotFoundException e) {
             System.out.println(e);
