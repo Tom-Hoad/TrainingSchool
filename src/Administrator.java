@@ -102,7 +102,13 @@ public class Administrator {
                 System.out.println("Instructor: " + instructor.getAssignedCourse());
             }
 
-            System.out.println(this.school.toString());
+            // Prints the status of the school and pauses for a second.
+            try {
+                System.out.println(this.school.toString());
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
         }
     }
 
@@ -154,6 +160,8 @@ public class Administrator {
             }
         }
 
+        // Closes the file and returns the created admin.
+        fileReader.close();
         return admin;
     }
 
