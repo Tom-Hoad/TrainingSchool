@@ -38,7 +38,7 @@ public class School {
         // Enrolls all the free students on a course.
         for (Student student : getStudents()) {
             for (Course course : getCourses()) {
-                if (!student.hasCertificate(course.getSubject())) {
+                if (!student.hasCertificate(course.getSubject()) && student.getEnrolledCourse() == null) {
                     course.enrolStudent(student);
                 }
             }
