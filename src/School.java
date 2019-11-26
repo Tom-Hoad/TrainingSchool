@@ -7,14 +7,16 @@ public class School {
     private ArrayList<Subject> subjects;
     private ArrayList<Course> courses;
     private ArrayList<Instructor> instructors;
+    private ArrayList<Graduate> graduates;
 
-    // The constructor for School. Takes the name.
+    // The constructor for School. Takes the name, and initialises the ArrayLists.
     public School(String name) {
         this.name = name;
         students = new ArrayList<>();
         subjects = new ArrayList<>();
         courses = new ArrayList<>();
         instructors = new ArrayList<>();
+        graduates = new ArrayList<>();
     }
 
     // Simulates a day at school.
@@ -136,6 +138,16 @@ public class School {
     // Gets the ArrayList of instructors in the school.
     public ArrayList<Instructor> getInstructors() {
         return instructors;
+    }
+
+    // Adds a graduate to the school.
+    public void add(Graduate graduate) {
+        graduates.add(graduate);
+    }
+
+    // Gets the ArrayList of instructors in the school.
+    public ArrayList<Graduate> getGraduates() {
+        return graduates;
     }
 
     @Override
