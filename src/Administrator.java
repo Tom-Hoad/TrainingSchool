@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -20,21 +19,21 @@ public class Administrator {
 
         // Adds up to two new students to the school.
         for (int i = 0; i < rand.nextInt(3); i++) {
-            school.add(new Student("Ross", 'M', 32));
+            school.add(createStudent());
         }
 
         // Adds new instructors to the school.
         if (rand.nextFloat() <= 0.2) {
-            school.add(new Teacher("Chandler", 'M', 29));
+            school.add(new Teacher("Ross", 'M', 32));
         }
         if (rand.nextFloat() <= 0.1) {
-            school.add(new Teacher("Rachael", 'F', 31));
+            school.add(new Demonstrator("Rachael", 'F', 30));
         }
         if (rand.nextFloat() <= 0.05) {
-            school.add(new Teacher("Monica", 'F', 30));
+            school.add(new OOTrainer("Monica", 'F', 28));
         }
         if (rand.nextFloat() <= 0.05) {
-            school.add(new Teacher("Phoebe", 'F', 32));
+            school.add(new GUITrainer("Chandler", 'M', 29));
         }
 
         // Runs a day at school.
@@ -89,17 +88,30 @@ public class Administrator {
 
             // Prints information about courses.
             for (Course course : school.getCourses()) {
-                System.out.println("Course: " + course.getStatus() + " " + Arrays.toString(course.getStudents()));
+                // Converts the ArrayList to show the student names
+                ArrayList<String> students = new ArrayList<>();
+                for (Student student : course.getStudents()) {
+                    students.add(student.getName());
+                }
+                System.out.println("Course (" + course.getSubject().getDescription() + ") : " + course.getStatus() + " " + students);
             }
 
             // Prints information about students.
             for (Student student : school.getStudents()) {
-                System.out.println("Student: " + student.getCertificates() + " " + student.getEnrolledCourse());
+                try {
+                    System.out.println("Student (" + student.getName() + ") : " + student.getCertificates() + " " + student.getEnrolledCourse().getSubject().getDescription());
+                } catch (NullPointerException e) {
+                    System.out.println("Student (" + student.getName() + ") : " + student.getCertificates() + " No course");
+                }
             }
 
             // Prints information about instructors.
             for (Instructor instructor : school.getInstructors()) {
-                System.out.println("Instructor: " + instructor.getAssignedCourse());
+                try {
+                    System.out.println("Instructor (" + instructor.getName() + ") : " + instructor.getAssignedCourse().getSubject().getDescription());
+                } catch (NullPointerException e) {
+                    System.out.println("Instructor (" + instructor.getName() + ") : No course");
+                }
             }
 
             updateGraduations(i);
@@ -114,6 +126,20 @@ public class Administrator {
         }
     }
 
+    // Creates a random student.
+    public Student createStudent() {
+        StringBuilder name = new StringBuilder();
+        char[] genders = {'M', 'F'};
+        Random rand = new Random();
+
+        name.append((char) (rand.nextInt(25) + 66));
+        for (int i = 0; i < 4; i++) {
+            name.append((char) (rand.nextInt(25) + 98));
+        }
+
+        return new Student(name.toString(), genders[rand.nextInt(2)], rand.nextInt(5) + 18);
+    }
+
     // Sets the day of graduation for new graduates.
     public void updateGraduations(int day) {
         for (Graduate graduate : school.getGraduates()) {
@@ -125,55 +151,60 @@ public class Administrator {
 
     // Gets the initial configuration file.
     public static Administrator loadConfig(String fileName) throws FileNotFoundException {
-        // Creates a scanner to read the file which instantiates the administrator.
-        Scanner fileReader = new Scanner(new File("D:/Documents/IdeaProjects/TrainingSchool/src/" + fileName));
-        Administrator admin = new Administrator(getValue(fileReader.nextLine()));
+        try {
+            // Creates a reader to read the file which instantiates the administrator.
+            BufferedReader fileReader = new BufferedReader(new FileReader(fileName));
+            Administrator admin = new Administrator(getValue(fileReader.readLine()));
+            String thisLine = fileReader.readLine();
 
-        // Reads the rest of the file.
-        while (fileReader.hasNextLine()) {
-            String thisLine = fileReader.nextLine();
-            String object = getObject(thisLine);
-            String[] split = getValue(thisLine).split(",");
+            // Reads the rest of the file.
+            while (thisLine != null) {
+                String object = getObject(thisLine);
+                String[] split = getValue(thisLine).split(",");
 
-            // Fills the school.
-            switch (object) {
-                // Adds a subject to the school.
-                case "subject":
-                    Subject subject = new Subject(Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
-                    subject.setDescription(split[0]);
-                    admin.school.add(subject);
-                    break;
-                // Adds a student to the school.
-                case "student":
-                    Student student = new Student(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
-                    admin.school.add(student);
-                    break;
-                // Adds a teacher to the school.
-                case "Teacher":
-                    Teacher teacher = new Teacher(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
-                    admin.school.add(teacher);
-                    break;
-                // Adds a demonstrator to the school.
-                case "Demonstrator":
-                    Demonstrator demonstrator = new Demonstrator(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
-                    admin.school.add(demonstrator);
-                    break;
-                // Adds a guiTrainer to the school.
-                case "GUITrainer":
-                    GUITrainer guiTrainer = new GUITrainer(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
-                    admin.school.add(guiTrainer);
-                    break;
-                // Adds a ooTrainer to the school.
-                case "OOTrainer":
-                    OOTrainer ooTrainer = new OOTrainer(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
-                    admin.school.add(ooTrainer);
-                    break;
+                // Fills the school.
+                switch (object) {
+                    // Adds a subject to the school.
+                    case "subject":
+                        Subject subject = new Subject(Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+                        subject.setDescription(split[0]);
+                        admin.school.add(subject);
+                        break;
+                    // Adds a student to the school.
+                    case "student":
+                        Student student = new Student(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                        admin.school.add(student);
+                        break;
+                    // Adds a teacher to the school.
+                    case "Teacher":
+                        Teacher teacher = new Teacher(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                        admin.school.add(teacher);
+                        break;
+                    // Adds a demonstrator to the school.
+                    case "Demonstrator":
+                        Demonstrator demonstrator = new Demonstrator(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                        admin.school.add(demonstrator);
+                        break;
+                    // Adds a guiTrainer to the school.
+                    case "GUITrainer":
+                        GUITrainer guiTrainer = new GUITrainer(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                        admin.school.add(guiTrainer);
+                        break;
+                    // Adds a ooTrainer to the school.
+                    case "OOTrainer":
+                        OOTrainer ooTrainer = new OOTrainer(split[0], split[1].charAt(0), Integer.parseInt(split[2]));
+                        admin.school.add(ooTrainer);
+                        break;
+                }
+                thisLine = fileReader.readLine();
             }
+            // Closes the file and returns the created admin.
+            fileReader.close();
+            return admin;
+        } catch (IOException e) {
+            System.out.println(e);
+            return null;
         }
-
-        // Closes the file and returns the created admin.
-        fileReader.close();
-        return admin;
     }
 
     // Reads the config file to return the value after the colon.
